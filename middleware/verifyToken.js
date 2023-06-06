@@ -28,7 +28,7 @@ function verifyTokenAndAdmin(req, res, next) {
 }
 function verifyTokenAndUserOnly(req, res, next) {
     verifyToken(req, res, () => {
-        if (req.user.id === req.params.id ) {
+        if (req.user._id === req.params.id ) {
             next()
         } else {
             return res.status(403).json({ message: "you are not allowed,User Only" })

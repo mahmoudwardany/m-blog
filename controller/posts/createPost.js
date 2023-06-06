@@ -45,8 +45,18 @@ module.exports.createNewPost = asyncHandler(async (req, res) => {
  * @access public
  * @method GET
  */
+/**--------------------------------
+ * @desc Get  Posts Count
+ * @router /api/posts/count
+ * @access public
+ * @method GET
+ */
 
-
+module.exports.postCount = asyncHandler(async (req, res) => {
+    const count = await Post.count()
+    res.status(200).json(count)
+ })
+ 
 
 module.exports.findPosts = asyncHandler(async (req, res) => {
     const numPerPage = 3
@@ -220,14 +230,13 @@ module.exports.likeController = asyncHandler(async (req, res) => {
         post = await Post.findByIdAndUpdate(postID, {
             $pull: { likes: userLoggedIn }
         }, { new: true })
-    } else {
-        //6-add user to likes
+    }else{
+       //6-add user to likes
         post = await Post.findByIdAndUpdate(postID, {
             $push: { likes: userLoggedIn }
-        }, { new: true })
-    }
+        }, { new: true }) 
+    }  
     res.status(200).json({
-        message: "Post Liked",
         post
     })
 })

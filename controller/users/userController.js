@@ -25,12 +25,11 @@ module.exports.getAllUser = asyncHandler(async (req, res) => {
  */
 
 module.exports.getUser = asyncHandler(async (req, res) => {
-   const { id } = req.params
-   const user = await userModel.findById(id).select("-password").populate('posts')
+   const user = await userModel.findById(req.params.id).select("-password").populate('posts')
    if (!user) {
       return res.status(404).json({ message: "User Not found" })
    }
-   res.status(200).json(user)
+      res.status(200).json(user)
 })
 /**--------------------------------
  * @desc update one user by himself
@@ -54,8 +53,8 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
          password: req.body.password,
          bio
       }
-   }, { new: true }).select("-password")
-   res.status(200).send(updateUser)
+   }, { new: true }).select("-password").populate('posts')
+   res.status(200).json(updateUser)
 })
 
 /**--------------------------------
@@ -85,31 +84,27 @@ module.exports.uploadPhoto = asyncHandler(async (req, res) => {
    }
    //2-get path file
    let pathImage = path.join(__dirname, `../../image/${req.file.filename}`)
-
    //3-upload to cloudinary
    const result = await cloudinaryUploadImage(pathImage);
    // //4-get user from DB
    const user = await userModel.findById(req.user._id);
    //5-delete old photo
-   if (user.profilePhoto.publicId !== null) {
-      await cloudinaryRemoveImage(user.profilePhoto.publicId)
+   if (user?.profilePhoto.publicId) {
+      await cloudinaryRemoveImage(user?.profilePhoto.publicId)
    }
    // //6-update photo
-
    user.profilePhoto = {
-      url: result.secure_url,
-      publicId: result.public_id,
+      url: result?.secure_url,
+      publicId: result?.public_id,
    }
-
    await user.save()
    //7-return photo
    res.status(200).json({
       message: "photo uploaded",
-      profilePhoto: {
-         url: result.secure_url,
-         publicId: result.public_id,
+      profilePhoto:{
+         url: result?.secure_url,
+         publicId: result?.public_id,
       }
-
    })
    fs.unlinkSync(pathImage)
 })
@@ -133,9 +128,13 @@ module.exports.deleteProfileUser = asyncHandler(async (req, res) => {
    const posts=await Post.find({user:user._id})
    //get ids for posts to remove Multi image for user
    const postsId=posts.map((post)=>post.image.publicId)
+  if(postsId?.length > 0){
    await cloudianryRemoveMultiImage(postsId)
+  }
    //delete image photo
-   await cloudinaryRemoveImage(user.profilePhoto.publicId)
+if(user?.profilePhoto.publicId){
+      await cloudinaryRemoveImage(user?.profilePhoto.publicId)
+}
    //delete posts and comments
    await commentModel.deleteMany({user:user._id})
    await Post.deleteMany({user:user._id})

@@ -32,7 +32,7 @@ const userSchema=new mongoose.Schema({
         type:Boolean,
         default:false
     },
-    Bio:String,
+    bio:String,
     profilePhoto:{
         type:Object,
         default:{
@@ -55,7 +55,7 @@ const validRegister=(obj)=>{
 const schema=joi.object({
     username:joi.string().min(3).max(100).trim().required(),
     email:joi.string().min(10).max(100).trim().required().email(),
-    password:joi.string().min(8).trim().required(),
+    password:joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,20}$')),
 })
 return schema.validate(obj)
 }
@@ -69,7 +69,7 @@ return schema.validate(obj)
 const validUpdateUser=(obj)=>{
     const schema=joi.object({
         username:joi.string().min(3).max(100).trim(),
-        password:joi.string().min(8).trim(),
+        password:joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,20}$')),
         bio:joi.string()
     })
     return schema.validate(obj)

@@ -20,7 +20,7 @@ module.exports.createCategoryCtrl = asyncHandler(async (req, res) => {
         user: req.user._id
     })
     res.status(201).json({
-        message: "Category Created",
+        message: "Category Created Successfully",
         category
     })
 })

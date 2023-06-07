@@ -1,6 +1,0 @@
-const asyncHandler=require("express-async-handler")
-const { validRegister, userModel } = require("../../models/UserModel")
-const bcrypt=require('bcryptjs')
-const crypto=require('crypto')
-const sendEmail=require('../../utils/sendEmail')
-const {verificationModel} = require("../../models/verificationToken")

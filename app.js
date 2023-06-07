@@ -6,7 +6,7 @@ const xxs=require('xss-clean')
 const helmet=require('helmet')
 const hpp=require('hpp')
 const rateLimit = require('express-rate-limit')
-
+const morgan=require('morgan')
 
 const cors=require('cors')
 require('dotenv').config()
@@ -21,6 +21,7 @@ const port=process.env.PORT || 8000
 
 //middleware
 app.use(express.json())
+app.use(morgan('tiny'))
 app.use(cors({
     origin:"http://localhost:3000"
 }))
@@ -32,10 +33,10 @@ const limiter = rateLimit({
 })
 // Apply the rate limiting middleware to all requests
 app.use(limiter)
-//Secruity Headers helmet
-app.use(helmet())
-//prevent HTTP Param Pollution
-app.use(hpp())
+// //Secruity Headers helmet
+// app.use(helmet())
+// //prevent HTTP Param Pollution
+// app.use(hpp())
 
 //router
 app.use('/api/auth',require('./router/authRouter'))
@@ -43,6 +44,7 @@ app.use('/api/users',require('./router/userRouter'))
 app.use('/api/posts',require('./router/postRouter'))
 app.use('/api/comments',require('./router/commentRouter'))
 app.use('/api/categories',require('./router/categoryRoute'))
+app.use('/api/password',require('./router/password'))
 
 //handle error
 app.use(notFound)

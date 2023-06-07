@@ -74,10 +74,24 @@ const validUpdateUser=(obj)=>{
     })
     return schema.validate(obj)
     }
+    //valid email
+    const validEmail=(obj)=>{
+        const schema=joi.object({
+            email:joi.string().required().email(),
+        })
+        return schema.validate(obj)
+        }
+        //valid new Password
+        const validNewPassword=(obj)=>{
+            const schema=joi.object({
+                password:joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,20}$')),
+            })
+            return schema.validate(obj)
+            }
 userSchema.methods.genrateToken=function(){
     return jwt.sign({_id:this._id,isAdmin:this.isAdmin},process.env.JWT_KEY)
 }
 const userModel=mongoose.model('User',userSchema)
 
 
-module.exports={userModel,validRegister,validLogin,validUpdateUser}
+module.exports={userModel,validRegister,validLogin,validUpdateUser,validEmail,validNewPassword}

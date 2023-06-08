@@ -97,7 +97,7 @@ module.exports.updateCommentCtrl = asyncHandler(async (req, res) => {
         $set:{
             text:req.body.text
         }
-    },{new:true})
+    }, { new: true })
     res.status(201).json({
         updateComment
     })

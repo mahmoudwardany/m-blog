@@ -7,7 +7,6 @@ const helmet=require('helmet')
 const hpp=require('hpp')
 const rateLimit = require('express-rate-limit')
 const morgan=require('morgan')
-
 const cors=require('cors')
 require('dotenv').config()
 
@@ -22,9 +21,17 @@ const port=process.env.PORT || 8000
 //middleware
 app.use(express.json())
 app.use(morgan('tiny'))
-// app.use(cors({
-//     origin:"https://blog-delta-steel.vercel.app/"
-// }))
+const allowedOrigins = ['http://localhost:3000', 'https://blog-delta-steel.vercel.app'];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 //prevent xxs
 app.use(xxs())
 const limiter = rateLimit({

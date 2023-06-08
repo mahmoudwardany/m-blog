@@ -23,7 +23,7 @@ const port=process.env.PORT || 8000
 app.use(express.json())
 app.use(morgan('tiny'))
 app.use(cors({
-    origin:"https://blog-delta-steel.vercel.app"
+    origin:"https://blog-delta-steel.vercel.app/"
 }))
 //prevent xxs
 app.use(xxs())

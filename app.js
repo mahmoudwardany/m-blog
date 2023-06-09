@@ -21,7 +21,7 @@ const port=process.env.PORT || 8000
 //middleware
 app.use(express.json())
 app.use(morgan('tiny'))
-const allowedOrigins = ['http://localhost:3000', 'https://blog-delta-steel.vercel.app'];
+const allowedOrigins = ['http://localhost:3000', 'https://m-blog7.vercel.app'];
 
 app.use(cors({
   origin: function (origin, callback) {

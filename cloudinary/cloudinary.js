@@ -3,8 +3,7 @@ cloudinary.config({
     cloud_name:"dtbjywygm",
     api_key:"691581472677386",
     api_secret:"_gGuRNWzkYEJ-v-E00vqFa_6qMQ"
-  });
-  
+});
 const cloudinaryUploadImage=async(fileUpload)=>{
     try {
         const data=await cloudinary.uploader.upload(fileUpload,{

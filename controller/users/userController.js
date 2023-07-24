@@ -8,8 +8,8 @@ const { commentModel } = require("../../models/Comments");
 const { Post } = require("../../models/PostModel");
 /**--------------------------------
  * @desc get all user 
- * @router /api/users
- * @access private
+ * @router /api/v1/catgory
+ * @access public
  * @method GET
  */
 

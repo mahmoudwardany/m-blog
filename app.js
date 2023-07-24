@@ -8,6 +8,7 @@ const hpp=require('hpp')
 const rateLimit = require('express-rate-limit')
 const morgan=require('morgan')
 const cors=require('cors')
+const compression=require("compression")
 require('dotenv').config()
 
 //connect db
@@ -21,6 +22,7 @@ const port=process.env.PORT || 8000
 //middleware
 app.use(express.json())
 app.use(morgan('tiny'))
+app.use(compression())
 const allowedOrigins = ['http://localhost:3000', 'https://m-blog7.vercel.app'];
 
 app.use(cors({

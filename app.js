@@ -43,9 +43,9 @@ const limiter = rateLimit({
 // Apply the rate limiting middleware to all requests
 app.use(limiter)
 // //Secruity Headers helmet
-// app.use(helmet())
-// //prevent HTTP Param Pollution
-// app.use(hpp())
+app.use(helmet())
+//prevent HTTP Param Pollution
+app.use(hpp())
 
 //router
 app.use('/api/auth',require('./router/authRouter'))

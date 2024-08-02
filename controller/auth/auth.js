@@ -63,10 +63,10 @@ module.exports.userLogin = asyncHandler(async (req, res) => {
 
     //check if user exists
     const user = await userModel.findOne({ email })
-    !user && res.status(400).send({ message: "Email or password are unvalid" })
+    !user && res.status(400).send({ message: "Email or password are Invalid" })
     //check password
     const checkPassword = await bcrypt.compare(password, user.password)
-    !checkPassword && res.status(400).send({ message: "Email or password are unvalid" })
+    !checkPassword && res.status(400).send({ message: "Email or password are Invalid" })
     if (!user.isVerified) {
         let verifcationToken = await verificationModel.findOne({
             userId: user._id

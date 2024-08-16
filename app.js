@@ -8,7 +8,7 @@ const hpp = require('hpp');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const cors = require('cors');
-const compression = require("compression");
+const compression = require('compression');
 require('dotenv').config();
 
 // Connect to the database
@@ -46,6 +46,11 @@ app.use(helmet());
 
 // Prevent HTTP Param Pollution
 app.use(hpp());
+
+// Define root route
+app.get('/', (req, res) => {
+  res.send('Welcome to the API!');
+});
 
 // Routes
 app.use('/api/auth', require('./router/authRouter'));

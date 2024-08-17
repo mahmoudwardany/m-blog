@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(morgan('tiny'));
 app.use(compression());
 
-const allowedOrigins = ['http://localhost:3000', 'https://m-blog7.vercel.app','https://clinic-wk44.onrender.com/'];
+const allowedOrigins = ['http://localhost:3000', 'https://m-blog7.vercel.app','https://clinic-wk44.onrender.com'];
 
 app.use(cors({
   origin: function (origin, callback) {

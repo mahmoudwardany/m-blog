@@ -1,14 +1,18 @@
-const { sendResetPassword, getResetPassword, resetPasswordCtrl } = require('../controller/auth/password')
+import { Router } from "express";
+import { sendResetPassword, getResetPassword, resetPasswordCtrl } from "../controller/auth/password.js";
 
-const router=require('express').Router()
+const router = Router();
 
-//api/password/reset-password-link
-router.post('/reset-password-link',sendResetPassword)
+// Route to send the reset password link
+// POST /api/password/reset-password-link
+router.post("/reset-password-link", sendResetPassword);
 
-//api/password/reset-password/:userId/:token
-router.route('/reset-password/:userId/:token')
-.get(getResetPassword)
-.post(resetPasswordCtrl)
+// Route to handle reset password verification and reset
+// GET /api/password/reset-password/:userId/:token
+// POST /api/password/reset-password/:userId/:token
+router
+    .route("/reset-password/:userId/:token")
+    .get(getResetPassword)
+    .post(resetPasswordCtrl);
 
-
-module.exports=router
+export default router;

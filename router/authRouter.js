@@ -1,12 +1,18 @@
-const { userLogin, verifyAccountCtrl,registerController } = require('../controller/auth/auth')
+import { Router } from "express";
+import { userLogin, verifyAccountCtrl, registerController } from "../controller/auth/auth.js";
 
-const router=require('express').Router()
+const router = Router();
 
+// Route to register a user
+// POST /api/auth/register
+router.post("/register", registerController);
 
-router.post('/register',registerController)
-router.post('/login',userLogin)
-//:userId/verify/:token
-router.get('/:userId/verify/:token',verifyAccountCtrl)
+// Route to log in a user
+// POST /api/auth/login
+router.post("/login", userLogin);
 
+// Route to verify an account
+// GET /api/auth/:userId/verify/:token
+router.get("/:userId/verify/:token", verifyAccountCtrl);
 
-module.exports=router
+export default router;

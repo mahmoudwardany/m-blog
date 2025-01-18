@@ -1,26 +1,29 @@
-const { verifyToken, verifyTokenAndAdmin, verifyTokenAndUserOnly, verifyTokenAuthorization } = require('../middleware/verifyToken')
-const validObjectId=require('../middleware/validObjectId')
-const photoUpload = require('../middleware/photoupload')
-const { createNewPost, findPosts, findPost, deletePost, updatePost, updatePostImg, likeController, postCount } = require('../controller/posts/createPost')
+import express from 'express';
+import { verifyToken } from '../middleware/verifyToken';
+import validObjectId from '../middleware/validObjectId';
+import photoUpload from '../middleware/photoupload';
+import { createNewPost, findPosts, findPost, deletePost, updatePost, updatePostImg, likeController, postCount } from '../controller/posts/posts';
 
-const router=require('express').Router()
+const router = express.Router();
 
-
-//Posts
+// Posts Routes
 router.route('/')
-.post(verifyToken,photoUpload.single("image"),createNewPost)
-.get(findPosts)
+    .post(verifyToken, photoUpload.single('image'), createNewPost)
+    .get(findPosts);
 
-//post count
-router.get('/count',postCount)
-//post
-router.route("/:id")
-.get(validObjectId,findPost)
-.delete(validObjectId,verifyToken,deletePost)
-.put(validObjectId,verifyToken,updatePost)
+// Post Count Route
+router.get('/count', postCount);
 
-router.route("/upload-image/:id")
-.put(validObjectId,verifyToken,photoUpload.single("image"),updatePostImg)
+// Post Routes by ID
+router.route('/:id')
+    .get(validObjectId, findPost)
+    .delete(validObjectId, verifyToken, deletePost)
+    .put(validObjectId, verifyToken, updatePost);
 
-router.put('/like/:id',validObjectId,verifyToken,likeController)
-module.exports=router
+// Post Image Upload Route
+router.put('/upload-image/:id', validObjectId, verifyToken, photoUpload.single('image'), updatePostImg);
+
+// Like Post Route
+router.put('/like/:id', validObjectId, verifyToken, likeController);
+
+export default router;

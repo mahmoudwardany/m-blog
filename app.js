@@ -1,15 +1,19 @@
-const express = require('express');
-const connectDB = require('./config/connectDB');
-const { notFound, handleError } = require('./middleware/errorhandler');
+import express from 'express';
+import connectDB from './config/connectDB';
+import { notFound, handleError } from './middleware/errorhandler';
+import xss from 'xss-clean';
+import helmet from 'helmet';
+import hpp from 'hpp';
+import rateLimit from 'express-rate-limit';
+import morgan from 'morgan';
+import cors from 'cors';
+import compression from 'compression';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+// Initialize app
 const app = express();
-const xss = require('xss-clean');
-const helmet = require('helmet');
-const hpp = require('hpp');
-const rateLimit = require('express-rate-limit');
-const morgan = require('morgan');
-const cors = require('cors');
-const compression = require('compression');
-require('dotenv').config();
 
 // Connect to the database
 connectDB();
@@ -45,12 +49,19 @@ app.get('/', (req, res) => {
 });
 
 // Routes
-app.use('/api/auth', require('./router/authRouter'));
-app.use('/api/users', require('./router/userRouter'));
-app.use('/api/posts', require('./router/postRouter'));
-app.use('/api/comments', require('./router/commentRouter'));
-app.use('/api/categories', require('./router/categoryRoute'));
-app.use('/api/password', require('./router/password'));
+import authRouter from './router/authRouter';
+import userRouter from './router/userRouter';
+import postRouter from './router/postRouter';
+import commentRouter from './router/commentRouter';
+import categoryRoute from './router/categoryRoute';
+import passwordRouter from './router/password';
+
+app.use('/api/auth', authRouter);
+app.use('/api/users', userRouter);
+app.use('/api/posts', postRouter);
+app.use('/api/comments', commentRouter);
+app.use('/api/categories', categoryRoute);
+app.use('/api/password', passwordRouter);
 
 // Error handling
 app.use(notFound);

@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "Backend service",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon app"
+    "dev": "nodemon app",
+    "build": "babel . --out-dir dist --ignore node_modules",
+    "start": "node dist/app.js"
   },
   "keywords": [],
   "author": "",
@@ -32,5 +35,10 @@
     "nodemailer": "^6.9.3",
     "nodemon": "^2.0.22",
     "xss-clean": "^0.1.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.26.4",
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0"
   }
 }

@@ -1,7 +1,7 @@
 import express from 'express';
-import { createCategoryCtrl, getCategoryCtrl, deleteCategoryCtrl } from '../controller/categories/categoryCtrl';
-import validObjectId from '../middleware/validObjectId';
-import {verifyTokenAndAdmin } from '../middleware/verifyToken';
+import { createCategoryCtrl, getCategoryCtrl, deleteCategoryCtrl } from '../controller/cateogries/categoryCtrl.js'
+import validObjectId from '../middleware/validObjectId.js';
+import {verifyTokenAndAdmin } from '../middleware/verifyToken.js';
 
 const router = express.Router();
 

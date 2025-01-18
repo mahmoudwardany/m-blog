@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
-import { commentModel, validcreateComment, validupdateComment } from '../../models/Comments';
-import { userModel } from '../../models/UserModel';
+import { commentModel, validcreateComment, validupdateComment } from '../../models/Comments.js';
+import { userModel } from '../../models/UserModel.js';
 
 /**--------------------------------
  * @desc Create New Comment

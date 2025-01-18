@@ -1,9 +1,9 @@
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { validLogin, validRegister, userModel } from "../../models/UserModel.js";
 import { verificationModel } from "../../models/verificationToken.js";
 import sendEmail from "../../utils/sendEmail.js";
+import { userModel } from "../../models/UserModel.js";
 
 /**
  * @desc Register New User

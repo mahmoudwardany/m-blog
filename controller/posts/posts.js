@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import asyncHandler from 'express-async-handler';
-import { cloudinaryUploadImage, cloudinaryRemoveImage } from "../../cloudinary/cloudinary";
-import { validPost, Post, validUpdatePost } from '../../models/PostModel';
-import { commentModel } from '../../models/Comments';
+import { cloudinaryUploadImage, cloudinaryRemoveImage } from "../../cloudinary/cloudinary.js";
+import { validPost, Post, validUpdatePost } from '../../models/PostModel.js';
+import { commentModel } from '../../models/Comments.js';
 
 const imagePath = (filename) => path.join(__dirname, `../../image/${filename}`);
 

@@ -1,7 +1,7 @@
 import express from 'express';
-import { createCommentCtrl, getCommentCtrl, deleteCommentCtrl, updateCommentCtrl } from '../controller/comments/comment';
-import validObjectId from '../middleware/validObjectId';
-import { verifyToken, verifyTokenAndAdmin } from '../middleware/verifyToken';
+import { createCommentCtrl, getCommentCtrl, deleteCommentCtrl, updateCommentCtrl } from '../controller/comments/comment.js';
+import validObjectId from '../middleware/validObjectId.js';
+import { verifyToken, verifyTokenAndAdmin } from '../middleware/verifyToken.js';
 
 const router = express.Router();
 

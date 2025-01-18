@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import { validCategory, categoryModel } from '../../models/CategoryModel';
+import { validCategory, categoryModel } from '../../models/CategoryModel.js';
 
 /**--------------------------------
  * @desc Create New Category

@@ -1,8 +1,8 @@
 import express from 'express';
-import { getAllUser, getUser, updateUser, usersCount, uploadPhoto, deleteProfileUser } from '../controller/users/userController';
-import { verifyToken, verifyTokenAndAdmin, verifyTokenAndUserOnly, verifyTokenAuthorization } from '../middleware/verifyToken';
-import validObjectId from '../middleware/validObjectId';
-import photoUpload from '../middleware/photoupload';
+import { getAllUser, getUser, updateUser, usersCount, uploadPhoto, deleteProfileUser } from '../controller/users/userController.js';
+import { verifyToken, verifyTokenAndAdmin, verifyTokenAndUserOnly, verifyTokenAuthorization } from '../middleware/verifyToken.js';
+import validObjectId from '../middleware/validObjectId.js';
+import photoUpload from '../middleware/photoupload.js';
 
 const router = express.Router();
 

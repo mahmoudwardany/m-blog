@@ -1,6 +1,6 @@
 import express from 'express';
-import connectDB from './config/connectDB';
-import { notFound, handleError } from './middleware/errorhandler';
+import connectDB from './config/connectDB.js';
+import { notFound, handleError } from './middleware/errorhandler.js';
 import xss from 'xss-clean';
 import helmet from 'helmet';
 import hpp from 'hpp';
@@ -9,6 +9,12 @@ import morgan from 'morgan';
 import cors from 'cors';
 import compression from 'compression';
 import dotenv from 'dotenv';
+import authRouter from './router/authRouter.js';
+import userRouter from './router/userRouter.js';
+import postRouter from './router/postRouter.js';
+import commentRouter from './router/commentRouter.js';
+import categoryRoute from './router/categoryRoute.js';
+import passwordRouter from './router/password.js';
 
 dotenv.config();
 
@@ -47,14 +53,6 @@ app.use(hpp());
 app.get('/', (req, res) => {
   res.send('Welcome to the API!');
 });
-
-// Routes
-import authRouter from './router/authRouter';
-import userRouter from './router/userRouter';
-import postRouter from './router/postRouter';
-import commentRouter from './router/commentRouter';
-import categoryRoute from './router/categoryRoute';
-import passwordRouter from './router/password';
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);

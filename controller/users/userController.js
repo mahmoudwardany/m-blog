@@ -1,11 +1,11 @@
 import asyncHandler from 'express-async-handler';
-import { userModel, validUpdateUser } from '../../models/UserModel';
+import { userModel, validUpdateUser } from '../../models/UserModel.js';
 import bcrypt from 'bcryptjs';
 import path from 'path';
-import { cloudinaryUploadImage, cloudinaryRemoveImage, cloudianryRemoveMultiImage } from '../../cloudinary/cloudinary';
+import { cloudinaryUploadImage, cloudinaryRemoveImage } from '../../cloudinary/cloudinary.js';  // Fixed import
 import fs from 'fs';
-import { commentModel } from '../../models/Comments';
-import { Post } from '../../models/PostModel';
+import { commentModel } from '../../models/Comments.js';
+import { Post } from '../../models/PostModel.js';
 
 /**--------------------------------
  * @desc Get all users

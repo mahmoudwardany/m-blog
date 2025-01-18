@@ -1,17 +1,15 @@
-const { createCategoryCtrl, getCategoryCtrl, deleteCategoryCtrl } = require('../controller/cateogries/categoryCtrl')
-const validObjectId = require('../middleware/validObjectId')
-const { verifyToken, verifyTokenAndAdmin } = require('../middleware/verifyToken')
+import express from 'express';
+import { createCategoryCtrl, getCategoryCtrl, deleteCategoryCtrl } from '../controller/categories/categoryCtrl';
+import validObjectId from '../middleware/validObjectId';
+import {verifyTokenAndAdmin } from '../middleware/verifyToken';
 
-
-const router=require('express').Router()
-
+const router = express.Router();
 
 router.route('/')
-.post(verifyTokenAndAdmin,createCategoryCtrl)
-.get(getCategoryCtrl)
+    .post(verifyTokenAndAdmin, createCategoryCtrl)
+    .get(getCategoryCtrl);
 
-router.route("/:id")
-.delete(validObjectId,verifyTokenAndAdmin,deleteCategoryCtrl)
+router.route('/:id')
+    .delete(validObjectId, verifyTokenAndAdmin, deleteCategoryCtrl);
 
-
-module.exports=router
+export default router;

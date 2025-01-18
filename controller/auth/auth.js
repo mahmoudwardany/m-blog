@@ -1,140 +1,136 @@
-const asyncHandler = require("express-async-handler")
-const { validLogin, userModel, validRegister } = require("../../models/UserModel")
-const bcrypt = require('bcryptjs');
-const { verificationModel } = require("../../models/verificationToken");
-const crypto = require('crypto')
-const sendEmail = require('../../utils/sendEmail')
-/**--------------------------------
+import asyncHandler from "express-async-handler";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import { validLogin, validRegister, userModel } from "../../models/UserModel.js";
+import { verificationModel } from "../../models/verificationToken.js";
+import sendEmail from "../../utils/sendEmail.js";
+
+/**
  * @desc Register New User
- * @router /api/v1/auth/register
- * @access public
- * @method POST
+ * @route POST /api/v1/auth/register
+ * @access Public
  */
+export const registerController = asyncHandler(async (req, res) => {
+    const { username, email, password } = req.body;
 
-module.exports.registerController = asyncHandler(async (req, res) => {
-    //validte
-    const { error } = validRegister(req.body)
-    error && res.status(400).send({ message: error.details[0].message })
-    //check if email exsits
-    const emailExsits = await userModel.findOne({ email: req.body.email })
-    emailExsits && res.status(400).send({ message: "Email Already Exists" })
-    //hash password
-    const salt = await bcrypt.genSalt(8)
-    const hashedPassword = await bcrypt.hash(req.body.password, salt)
-    //save user 
-    const newUser = await new userModel({
-        username: req.body.username,
-        email: req.body.email,
+    // Validate input
+    const { error } = validRegister(req.body);
+    if (error) return res.status(400).json({ message: error.details[0].message });
+
+    // Check if email exists
+    const emailExists = await userModel.findOne({ email });
+    if (emailExists) return res.status(400).json({ message: "Email Already Exists" });
+
+    // Hash password
+    const salt = await bcrypt.genSalt(8);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Save user
+    const newUser = await userModel.create({
+        username,
+        email,
         password: hashedPassword,
-    }).save()
-    //creatin verificationToken & save in DB
-    const verificationToken = await new verificationModel({
-        userId: newUser?._id,
-        token: crypto.randomBytes(32).toString("hex")
-    }).save()
+    });
 
-    //Making the link
-    const link = `${process.env.CLIENT_DOMAIN}/user/${newUser?._id}/verify/${verificationToken.token}`
-    //putting link in html 
-    const htmlTemplete = `
-    <div>
-    <p>Click here to verify your Email </p>
-    <a href="${link}" >Verify</a>
-    </div>
-    `
-    //send email
-    await sendEmail(newUser.email, "verify your email", htmlTemplete)
-    //send json
-    res.status(201).json({ message: "We Sent to you an email.please Check it and verify your email address" })
-})
-/**--------------------------------
- * @desc Login 
- * @router /api/v1/auth/login
- * @access public
- * @method POST
+    // Create verification token
+    const verificationToken = await verificationModel.create({
+        userId: newUser._id,
+        token: crypto.randomBytes(32).toString("hex"),
+    });
+
+    // Create verification link
+    const link = `${process.env.CLIENT_DOMAIN}/user/${newUser._id}/verify/${verificationToken.token}`;
+
+    // Email template
+    const htmlTemplate = `
+        <div>
+            <p>Click here to verify your Email:</p>
+            <a href="${link}">Verify</a>
+        </div>
+    `;
+
+    // Send email
+    await sendEmail(newUser.email, "Verify your email", htmlTemplate);
+
+    res.status(201).json({ message: "We sent you an email. Please check it and verify your email address." });
+});
+
+/**
+ * @desc Login User
+ * @route POST /api/v1/auth/login
+ * @access Public
  */
-
-module.exports.userLogin = asyncHandler(async (req, res) => {
-    //email and password
+export const userLogin = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    //check if email and password are valid
-    const { error } = validLogin({ email, password })
-    error && res.status(400).send({ message: error.details[0].message })
 
-    //check if user exists
-    const user = await userModel.findOne({ email })
-    !user && res.status(400).send({ message: "Email or password are Invalid" })
-    //check password
-    const checkPassword = await bcrypt.compare(password, user.password)
-    !checkPassword && res.status(400).send({ message: "Email or password are Invalid" })
+    // Validate input
+    const { error } = validLogin({ email, password });
+    if (error) return res.status(400).json({ message: error.details[0].message });
+
+    // Check if user exists
+    const user = await userModel.findOne({ email });
+    if (!user) return res.status(400).json({ message: "Email or password are invalid" });
+
+    // Check password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) return res.status(400).json({ message: "Email or password are invalid" });
+
+    // Check if user is verified
     if (!user.isVerified) {
-        let verifcationToken = await verificationModel.findOne({
-            userId: user._id
-        })
-        if (!verifcationToken) {
-            verifcationToken = await new verificationModel({
-                userId: newUser?._id,
-                token: crypto.randomBytes(32).toString("hex")
-            }).save()
+        let verificationToken = await verificationModel.findOne({ userId: user._id });
 
-            //Making the link
-            const link = `${process.env.CLIENT_DOMAIN}/user/${newUser?._id}/verify/${verifcationToken.token}`
-            //putting link in html 
-            const htmlTemplete = `
-            <div>
-            <p>Click here to verify your Email </p>
-            <a href="${link}" >Verify</a>
-            </div>
-            `
-            //send email
-            await sendEmail(newUser.email, "verify your email", htmlTemplete)
-            return res.status(400).json({ message: "We Sent to you an email.please Check it and verify your email address" })
+        if (!verificationToken) {
+            verificationToken = await verificationModel.create({
+                userId: user._id,
+                token: crypto.randomBytes(32).toString("hex"),
+            });
+
+            const link = `${process.env.CLIENT_DOMAIN}/user/${user._id}/verify/${verificationToken.token}`;
+            const htmlTemplate = `
+                <div>
+                    <p>Click here to verify your Email:</p>
+                    <a href="${link}">Verify</a>
+                </div>
+            `;
+            await sendEmail(user.email, "Verify your email", htmlTemplate);
         }
 
+        return res.status(400).json({ message: "We sent you an email. Please check it and verify your email address." });
     }
-    //generate token
-    const token = user.genrateToken()
-    //send json to user
-    res.status(200).send({
+
+    // Generate token
+    const token = user.generateToken();
+
+    res.status(200).json({
         _id: user._id,
         profilePhoto: user.profilePhoto,
         isAdmin: user.isAdmin,
         token,
         username: user.username,
-        message: "Login Successfully"
-    })
-})
-/**--------------------------------
- * @desc Verify 
- * @router /api/v1/auth/:userId/verify/:token
- * @access public
- * @method Get
+        message: "Login successful",
+    });
+});
+
+/**
+ * @desc Verify User Account
+ * @route GET /api/v1/auth/:userId/verify/:token
+ * @access Public
  */
+export const verifyAccountCtrl = asyncHandler(async (req, res) => {
+    const { userId, token } = req.params;
 
-module.exports.verifyAccountCtrl = asyncHandler(async (req, res) => {
-    //check user 
-    const user = await userModel.findById(req.params.userId)
-    if (!user) {
-        return res.status(400).json({
-            message: "invalid link"
-        })
-    }
-    //check verifcation token
-    const verificationToken = await verificationModel.findOne({
-        userId: user._id,
-        token: req.params.token
-    })
-    if (!verificationToken) {
-        return res.status(400).json({
-            message: "invalid link"
-        })
-    }
+    // Check user
+    const user = await userModel.findById(userId);
+    if (!user) return res.status(400).json({ message: "Invalid link" });
 
+    // Check verification token
+    const verificationToken = await verificationModel.findOne({ userId: user._id, token });
+    if (!verificationToken) return res.status(400).json({ message: "Invalid link" });
+
+    // Verify user
     user.isVerified = true;
     await user.save();
-    await verificationToken.deleteOne()
-    res.status(200).json({
-        message: "Account Verified Successfully"
-    })
-})
+    await verificationToken.deleteOne();
 
+    res.status(200).json({ message: "Account verified successfully" });
+});

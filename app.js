@@ -19,16 +19,8 @@ app.use(express.json());
 app.use(morgan('tiny'));
 app.use(compression());
 
-const allowedOrigins = ['http://localhost:3000', 'https://m-blog7.vercel.app','https://clinic-wk44.onrender.com'];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  }
+  origin: '*'
 }));
 
 // Prevent XSS

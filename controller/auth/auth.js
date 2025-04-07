@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { verificationModel } from "../../models/verificationToken.js";
 import sendEmail from "../../utils/sendEmail.js";
 import { userModel } from "../../models/UserModel.js";
+import { validLogin, validRegister, userModel } from "../../models/UserModel.js";
 
 /**
  * @desc Register New User
